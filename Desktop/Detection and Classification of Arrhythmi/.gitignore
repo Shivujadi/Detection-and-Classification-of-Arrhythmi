@@ -1,0 +1,45 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Data Files (exclude large raw ECG data files, keep gitkeep in data directories)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Trained Models (exclude large pkl/joblib files from git if necessary, keep .gitkeep)
+models/*.pkl
+models/*.joblib
+!models/.gitkeep
+
+# Static Generated Plots
+static/plots/*.png
+static/plots/*.jpg
+static/plots/*.svg
+!static/plots/.gitkeep
+
+# Environment variables & secrets
+.env
+.env.local
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}About Project — ECG Arrhythmia ML System{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>About Project & Problem Statement</h2>
+  <p style="margin-bottom: 1rem;">
+    Cardiac arrhythmia refers to an irregular heartbeat sequence resulting from electrical conduction defects in the heart muscle. Arrhythmias range from harmless premature contractions to severe life-threatening conditions such as Ventricular Tachycardia and Fibrillation.
+  </p>
+  <p style="margin-bottom: 1.5rem;">
+    Electrocardiograms (ECG) are the non-invasive gold standard diagnostic tool for monitoring cardiac electrical activity. Manually analyzing long continuous 24-hour Holter monitor ECG recordings is time-consuming and prone to human error. This project implements a machine learning system to automate heartbeat classification.
+  </p>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h2>MIT-BIH Arrhythmia Database</h2>
+    <p style="margin-bottom: 1rem;">
+      The primary dataset used is the <strong>PhysioNet MIT-BIH Arrhythmia Database</strong> containing 48 fully annotated half-hour two-channel ambulatory ECG recordings sampled at 360 Hz from 47 human subjects.
+    </p>
+    <ul style="padding-left: 1.25rem; color: var(--text-muted); font-size: 0.95rem;">
+      <li><strong>Total Records:</strong> 48 WFDB Records (100–234)</li>
+      <li><strong>Sampling Rate:</strong> 360 Hz</li>
+      <li><strong>Primary ECG Lead:</strong> Modified Lead II (MLII)</li>
+      <li><strong>Total Inspected Annotations:</strong> 112,647 annotations</li>
+      <li><strong>Segmented Heartbeat Window:</strong> 180 sample points around R-peaks</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>AAMI EC57 5-Class Standard</h2>
+    <p style="margin-bottom: 1rem;">
+      Heartbeats are categorized according to the standard Association for the Advancement of Medical Instrumentation (AAMI EC57) guidelines:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>AAMI Class</th>
+          <th>Description</th>
+          <th>MIT-BIH Raw Symbols</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>N</strong></td>
+          <td>Normal / Bundle Branch Block</td>
+          <td>N, L, R, e, j</td>
+        </tr>
+        <tr>
+          <td><strong>S</strong></td>
+          <td>Supraventricular Ectopic (SVEB)</td>
+          <td>A, a, J, S</td>
+        </tr>
+        <tr>
+          <td><strong>V</strong></td>
+          <td>Ventricular Ectopic (VEB)</td>
+          <td>V, E</td>
+        </tr>
+        <tr>
+          <td><strong>F</strong></td>
+          <td>Fusion Beat</td>
+          <td>F</td>
+        </tr>
+        <tr>
+          <td><strong>Q</strong></td>
+          <td>Paced / Unclassifiable Beat</td>
+          <td>/, f, Q</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Machine Learning Algorithms Implemented</h2>
+  <div class="grid-4" style="margin-bottom: 0;">
+    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+      <strong style="color: var(--primary-accent);">1. Logistic Regression</strong>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Multinomial linear classification with L-BFGS optimization.</p>
+    </div>
+    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+      <strong style="color: var(--primary-accent);">2. KNN & Weighted KNN</strong>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">$k=5$ nearest neighbors with distance-weighted voting.</p>
+    </div>
+    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+      <strong style="color: var(--primary-accent);">3. Random Forest</strong>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Ensemble of 100 decision trees for robust non-linear boundaries.</p>
+    </div>
+    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+      <strong style="color: var(--primary-accent);">4. Naive Bayes & SVM</strong>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Gaussian Naive Bayes and Calibrated Linear SGD-SVM.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

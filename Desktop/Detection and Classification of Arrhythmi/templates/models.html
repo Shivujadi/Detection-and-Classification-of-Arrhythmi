@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Model Performance & Comparison — ECG Arrhythmia ML{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>Machine Learning Model Evaluation Results</h2>
+  <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+    Comparison table showing actual empirical metrics calculated from evaluating 7 trained models on 26,357 test heartbeats across 12 unseen patient records (preventing data leakage).
+  </p>
+
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Accuracy</th>
+          <th>Macro Precision</th>
+          <th>Macro Recall</th>
+          <th>Macro F1 Score</th>
+          <th>Weighted Precision</th>
+          <th>Weighted Recall</th>
+          <th>Weighted F1 Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in models_table %}
+        <tr class="{% if m['Model'] == best_model %}highlight-row{% endif %}">
+          <td>
+            <strong>{{ m['Model'] }}</strong>
+            {% if m['Model'] == best_model %}
+              <span class="badge" style="background: #dcfce7; color: #166534; margin-left: 0.5rem;">Selected Best</span>
+            {% endif %}
+          </td>
+          <td>{{ "%.4f"|format(m['Accuracy']) }}</td>
+          <td>{{ "%.4f"|format(m['Macro Precision']) }}</td>
+          <td>{{ "%.4f"|format(m['Macro Recall']) }}</td>
+          <td><strong>{{ "%.4f"|format(m['Macro F1 Score']) }}</strong></td>
+          <td>{{ "%.4f"|format(m['Weighted Precision']) }}</td>
+          <td>{{ "%.4f"|format(m['Weighted Recall']) }}</td>
+          <td>{{ "%.4f"|format(m['Weighted F1 Score']) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h2>Model Selection Rationale</h2>
+    <p style="margin-bottom: 1rem;">
+      <strong>Selection Criterion:</strong> Primary metric = <strong>Macro F1 Score</strong>.
+    </p>
+    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+      Due to class imbalance (Normal <code>N</code> beats account for ~82.7% of heartbeats), overall accuracy can be misleadingly high even if minority arrhythmia classes are misclassified. <strong>Weighted KNN</strong> achieved the highest Macro F1 Score (<strong>0.4490</strong>), representing the best balanced performance across all 5 AAMI classes.
+    </p>
+    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid var(--card-border);">
+      <p style="font-size: 0.9rem;"><strong>Selected Best Model File:</strong> <code>models/best_model.pkl</code></p>
+      <p style="font-size: 0.9rem;"><strong>Test Dataset Size:</strong> {{ eval_json.get('test_samples', 26357) }} samples (12 Records)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Confusion Matrix & Comparison Plots</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+      Generated evaluation charts saved under <code>static/plots/</code>:
+    </p>
+    <div style="display: flex; gap: 1rem;">
+      <a href="{{ url_for('static', filename='plots/model_comparison.png') }}" target="_blank" class="btn btn-secondary">Open Model Bar Chart ↗</a>
+      <a href="{{ url_for('static', filename='plots/confusion_matrices.png') }}" target="_blank" class="btn btn-secondary">Open Confusion Matrix ↗</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — ECG Arrhythmia Classification{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<div class="hero">
+  <h1>Detection and Classification of Arrhythmia Using Machine Learning</h1>
+  <p>An end-to-end web machine learning system for pre-processing, segmenting, analyzing, and predicting cardiac arrhythmias from PhysioNet MIT-BIH Electrocardiogram (ECG) data.</p>
+  <div class="hero-badges">
+    <span class="badge">PhysioNet MIT-BIH Database</span>
+    <span class="badge">AAMI EC57 5-Class Standard</span>
+    <span class="badge">7 ML Algorithms Compared</span>
+    <span class="badge">Zero Data Leakage Group-Split</span>
+  </div>
+</div>
+
+<!-- System Statistics Grid -->
+<div class="grid-4">
+  <div class="stat-card">
+    <h3>Total Heartbeats</h3>
+    <div class="value">{{ "{:,}".format(total_samples) }}</div>
+  </div>
+  <div class="stat-card">
+    <h3>Training Beats</h3>
+    <div class="value">{{ "{:,}".format(train_samples) }}</div>
+  </div>
+  <div class="stat-card">
+    <h3>Testing Beats</h3>
+    <div class="value">{{ "{:,}".format(test_samples) }}</div>
+  </div>
+  <div class="stat-card">
+    <h3>Selected Best Model</h3>
+    <div class="value" style="font-size: 1.5rem; color: var(--emerald-accent);">{{ best_model }}</div>
+  </div>
+</div>
+
+<!-- Workflow Section -->
+<div class="card">
+  <h2>
+    <svg class="ecg-icon" style="stroke: var(--primary-accent);" viewBox="0 0 24 24">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+    </svg>
+    System Architecture & End-to-End Pipeline
+  </h2>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin: 1.5rem 0; text-align: center;">
+    <div class="badge" style="padding: 0.6rem 1rem; font-size: 0.9rem;">1. PhysioNet MIT-BIH Dataset</div>
+    <span style="color: var(--text-muted); font-weight: bold; align-self: center;">→</span>
+    <div class="badge" style="padding: 0.6rem 1rem; font-size: 0.9rem;">2. Butterworth Bandpass Filter</div>
+    <span style="color: var(--text-muted); font-weight: bold; align-self: center;">→</span>
+    <div class="badge" style="padding: 0.6rem 1rem; font-size: 0.9rem;">3. R-Peak 180-Sample Segment</div>
+    <span style="color: var(--text-muted); font-weight: bold; align-self: center;">→</span>
+    <div class="badge" style="padding: 0.6rem 1rem; font-size: 0.9rem;">4. Patient Record Group-Split</div>
+    <span style="color: var(--text-muted); font-weight: bold; align-self: center;">→</span>
+    <div class="badge" style="padding: 0.6rem 1rem; font-size: 0.9rem;">5. 7 ML Models Training</div>
+    <span style="color: var(--text-muted); font-weight: bold; align-self: center;">→</span>
+    <div class="badge" style="padding: 0.6rem 1rem; font-size: 0.9rem; background: #dcfce7; color: #166534;">6. Flask Web Prediction</div>
+  </div>
+</div>
+
+<!-- Quick Action Buttons -->
+<div class="grid-2">
+  <div class="card">
+    <h2>Real-Time ECG Prediction</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1.25rem;">
+      Select sample ECG heartbeat vectors or upload a CSV file to predict the AAMI arrhythmia category using the trained machine learning model.
+    </p>
+    <a href="{{ url_for('predict') }}" class="btn btn-primary">Go to Prediction Page →</a>
+  </div>
+  
+  <div class="card">
+    <h2>Model Evaluation & Metrics</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1.25rem;">
+      View complete experimental performance metrics (Accuracy, Precision, Recall, Macro F1, Weighted F1) for Logistic Regression, KNN, Weighted KNN, Decision Tree, Random Forest, Naive Bayes, and SVM.
+    </p>
+    <a href="{{ url_for('models') }}" class="btn btn-secondary">View Model Comparison →</a>
+  </div>
+</div>
+
+<!-- Academic Medical Disclaimer -->
+<div class="disclaimer-box">
+  <strong>Academic Project Disclaimer:</strong> This web application is developed strictly for academic and educational demonstration purposes as part of a final-year engineering project. It is not a certified medical diagnostic system and should not be used for clinical decision-making.
+</div>
+{% endblock %}

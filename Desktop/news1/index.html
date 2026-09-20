@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseNews | Real-Time News & Audio Reader</title>
+    <meta name="description" content="A responsive, real-time news application with integrated text-to-speech audio reader, category filters, and live search.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Announcement / Ticker Bar -->
+    <div class="top-ticker" id="topTicker">
+        <div class="ticker-badge">
+            <span class="pulse-dot"></span> BREAKING
+        </div>
+        <div class="ticker-content" id="tickerText">
+            Welcome to PulseNews - Select a category or search for real-time news headlines!
+        </div>
+        <div class="ticker-clock" id="liveClock">--:--:--</div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo-container" id="logoBtn" role="button" tabindex="0">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                        <path d="M18 14h-8"></path>
+                        <path d="M15 18h-5"></path>
+                        <path d="M10 6h8v4h-8V6Z"></path>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">Pulse<span class="accent-text">News</span></span>
+                    <span class="logo-subtitle">Live Headlines & Voice AI</span>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-box">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search news topics, terms, or sources..." autocomplete="off">
+                <button class="clear-search-btn" id="clearSearchBtn" aria-label="Clear search" hidden>&times;</button>
+                <button class="search-btn" id="searchSubmitBtn" aria-label="Search">Search</button>
+            </div>
+
+            <!-- Controls (Country, Bookmarks, Settings, Theme) -->
+            <div class="header-controls">
+                <!-- Country Selector -->
+                <div class="country-selector-wrapper" title="Select Country">
+                    <svg class="control-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <select id="countrySelect" aria-label="Select Country">
+                        <option value="us">🇺🇸 US</option>
+                        <option value="in" selected>🇮🇳 India</option>
+                        <option value="gb">🇬🇧 UK</option>
+                        <option value="ca">🇨🇦 Canada</option>
+                        <option value="au">🇦🇺 Australia</option>
+                    </select>
+                </div>
+
+                <!-- Saved / Bookmarks Toggle -->
+                <button class="icon-btn" id="bookmarksToggleBtn" title="Saved Articles">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="badge" id="bookmarkCount">0</span>
+                </button>
+
+                <!-- API Key / Settings Button -->
+                <button class="icon-btn" id="settingsModalBtn" title="API Settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+
+                <!-- Theme Toggle Button -->
+                <button class="icon-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation / Category Filter Bar -->
+    <nav class="category-nav">
+        <div class="nav-container">
+            <div class="category-scroll" id="categoryTabs">
+                <button class="category-btn active" data-category="general">
+                    <span class="nav-icon">🌐</span> General
+                </button>
+                <button class="category-btn" data-category="business">
+                    <span class="nav-icon">💼</span> Business
+                </button>
+                <button class="category-btn" data-category="technology">
+                    <span class="nav-icon">💻</span> Technology
+                </button>
+                <button class="category-btn" data-category="entertainment">
+                    <span class="nav-icon">🎬</span> Entertainment
+                </button>
+                <button class="category-btn" data-category="sports">
+                    <span class="nav-icon">⚽</span> Sports
+                </button>
+                <button class="category-btn" data-category="science">
+                    <span class="nav-icon">🔬</span> Science
+                </button>
+                <button class="category-btn" data-category="health">
+                    <span class="nav-icon">🩺</span> Health
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+
+        <!-- Status Info Bar -->
+        <div class="status-bar" id="statusBar">
+            <div class="status-left">
+                <h2 id="currentCategoryHeading">Top Headlines</h2>
+                <span class="article-count-pill" id="articleCountPill">Loading articles...</span>
+            </div>
+            <div class="status-right">
+                <label for="sortSelect" class="sort-label">Sort by:</label>
+                <select id="sortSelect" aria-label="Sort articles">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                </select>
+                <button class="refresh-btn" id="refreshBtn" title="Refresh Feed">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Hero Featured Article Container -->
+        <section class="hero-section" id="heroContainer" style="display: none;">
+            <!-- Rendered dynamically -->
+        </section>
+
+        <!-- Skeleton Loader Container -->
+        <div class="news-grid-skeleton" id="newsSkeleton">
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line medium"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line medium"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line medium"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line medium"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line medium"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line medium"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Grid -->
+        <section class="news-grid" id="newsGrid">
+            <!-- News Article Cards will be dynamically inserted here -->
+        </section>
+
+        <!-- Empty & Error State View -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">📰</div>
+            <h3 id="emptyTitle">No News Articles Found</h3>
+            <p id="emptyMessage">We couldn't find any articles matching your request. Try searching for another topic or reset your filters.</p>
+            <button class="primary-btn" id="emptyResetBtn">Reset Search & Filters</button>
+        </div>
+
+    </main>
+
+    <!-- Floating Text-To-Speech (TTS) Audio Player Bar -->
+    <div class="tts-player-bar" id="ttsPlayerBar" style="display: none;">
+        <div class="tts-container">
+            <!-- Article Preview Info -->
+            <div class="tts-article-info">
+                <div class="tts-sound-wave" id="ttsVisualizer">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+                <div class="tts-text-wrapper">
+                    <span class="tts-label">NOW LISTENING</span>
+                    <h4 class="tts-title" id="ttsCurrentTitle">Article Title...</h4>
+                </div>
+            </div>
+
+            <!-- Speech Controls -->
+            <div class="tts-controls">
+                <button class="tts-control-btn" id="ttsPlayPauseBtn" title="Play / Pause Audio">
+                    <svg class="play-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <svg class="pause-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </button>
+
+                <button class="tts-control-btn stop-btn" id="ttsStopBtn" title="Stop Reading">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                    </svg>
+                </button>
+
+                <!-- Voice Selection Dropdown -->
+                <div class="tts-setting-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                    <select id="ttsVoiceSelect" aria-label="Select Voice Accent">
+                        <option value="">Default Voice</option>
+                    </select>
+                </div>
+
+                <!-- Speed Rate Dropdown -->
+                <div class="tts-setting-item">
+                    <span class="speed-label">Speed:</span>
+                    <select id="ttsRateSelect" aria-label="Select Speed">
+                        <option value="0.75">0.75x</option>
+                        <option value="1.0" selected>1.0x</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="2.0">2.0x</option>
+                    </select>
+                </div>
+
+                <button class="tts-close-btn" id="ttsCloseBtn" title="Close Audio Player">&times;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>⚙️ News API Configuration</h3>
+                <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>PulseNews provides seamless live news using high-speed CORS-friendly public endpoints. You can also specify your own custom <strong>NewsAPI.org</strong> or <strong>GNews.io</strong> API key below for live custom fetching.</p>
+
+                <div class="form-group">
+                    <label for="apiKeyInput">Custom NewsAPI Key (Optional):</label>
+                    <input type="text" id="apiKeyInput" placeholder="e.g. 849f2b..." autocomplete="off">
+                    <small class="form-hint">Stored securely in your local browser storage.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="apiProviderSelect">Data Source Provider:</label>
+                    <select id="apiProviderSelect">
+                        <option value="auto">⚡ Auto (Best Mirror & Fallback - Recommended)</option>
+                        <option value="newsapi">📰 NewsAPI.org (Requires API key)</option>
+                        <option value="gnews">🌐 GNews.io (Requires API key)</option>
+                        <option value="demo">📦 Demo Dataset (Offline Mode)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn" id="modalCancelBtn">Cancel</button>
+                <button class="primary-btn" id="modalSaveBtn">Save & Reload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification System -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="logo-title">Pulse<span class="accent-text">News</span></div>
+                <p>Real-Time Global News & AI Text-to-Speech Engine</p>
+            </div>
+            <div class="footer-info">
+                <p>Designed with HTML5, CSS3 Grid, and Vanilla JS for College Capstone Project.</p>
+                <p class="copyright">&copy; 2026 PulseNews. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
